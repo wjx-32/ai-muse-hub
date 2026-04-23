@@ -149,22 +149,45 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
                   </button>
                 </div>
 
-                {/* Answer */}
-                <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin">
-                  <div className="rounded-lg bg-muted/40 p-3 text-sm text-foreground/90">
-                    <div className="mb-1 flex flex-wrap items-center gap-1.5">
-                      <span className="text-xs text-muted-foreground">{ver}</span>
-                      {currentVer.tags.map((t) => (
-                        <span key={t} className="rounded border border-border bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
-                      ))}
+                {/* Multi-turn answers */}
+                <div className="flex-1 space-y-4 overflow-y-auto px-4 py-4 scrollbar-thin">
+                  {turns.map((turn, idx) => (
+                    <div key={idx} className="space-y-2">
+                      {/* User question bubble */}
+                      <div className="flex items-start gap-2">
+                        <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/15 text-primary">
+                          <User className="h-3.5 w-3.5" />
+                        </div>
+                        <div className="flex-1 rounded-lg bg-primary/10 px-3 py-2 text-sm font-medium text-foreground">
+                          {turn.q}
+                        </div>
+                      </div>
+                      {/* Assistant reply */}
+                      <div className="flex items-start gap-2">
+                        <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-bold text-white" style={{ backgroundColor: s.color }}>
+                          {s.name[0]}
+                        </div>
+                        <div className="flex-1">
+                          <div className="rounded-lg bg-muted/40 p-3 text-sm text-foreground/90">
+                            {idx === 0 && (
+                              <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                                <span className="text-xs text-muted-foreground">{ver}</span>
+                                {currentVer.tags.map((t) => (
+                                  <span key={t} className="rounded border border-border bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
+                                ))}
+                              </div>
+                            )}
+                            <p className="whitespace-pre-wrap leading-relaxed">{turn.replies[id] ?? "（演示回答）"}</p>
+                          </div>
+                          <div className="mt-1.5 flex gap-1">
+                            <button className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"><Copy className="h-3.5 w-3.5" /></button>
+                            <button className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"><RefreshCw className="h-3.5 w-3.5" /></button>
+                            <button className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"><ThumbsUp className="h-3.5 w-3.5" /></button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <p className="whitespace-pre-wrap leading-relaxed">{reply}</p>
-                  </div>
-                  <div className="mt-2 flex gap-1">
-                    <button className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><Copy className="h-3.5 w-3.5" /></button>
-                    <button className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><RefreshCw className="h-3.5 w-3.5" /></button>
-                    <button className="rounded-md p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"><ThumbsUp className="h-3.5 w-3.5" /></button>
-                  </div>
+                  ))}
                 </div>
               </div>
             );
