@@ -47,7 +47,8 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
         <div className="grid h-full" style={{ gridTemplateColumns: `repeat(${Math.max(selected.length, 1)}, minmax(0, 1fr))` }}>
           {selected.map((id) => {
             const s = SERIES.find((x) => x.id === id)!;
-            const ver = versionMap[id] ?? s.versions[0];
+            const ver = versionMap[id] ?? s.versions[0].name;
+            const currentVer = s.versions.find((x) => x.name === ver) ?? s.versions[0];
             const reply = SAMPLE_REPLIES[id]?.[0] ?? "（演示回答）这是该模型的示例输出内容。";
             return (
               <div key={id} className="flex h-full flex-col border-r border-border last:border-r-0">
@@ -99,17 +100,22 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
                       <ChevronDown className="h-3 w-3" />
                     </button>
                     {openMenu === id && (
-                      <div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-fade-in">
+                      <div className="absolute right-0 top-full z-20 mt-1 w-56 overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-fade-in">
                         {s.versions.map((v) => (
                           <button
-                            key={v}
+                            key={v.name}
                             onClick={() => {
-                              onSetVersion(id, v);
+                              onSetVersion(id, v.name);
                               setOpenMenu(null);
                             }}
-                            className={cn("block w-full px-3 py-1.5 text-left text-xs hover:bg-accent", v === ver && "bg-accent text-accent-foreground")}
+                            className={cn("flex w-full flex-col items-start gap-1 px-3 py-2 text-left text-xs hover:bg-accent", v.name === ver && "bg-accent text-accent-foreground")}
                           >
-                            {v}
+                            <span className="font-medium">{v.name}</span>
+                            <div className="flex flex-wrap gap-1">
+                              {v.tags.map((t) => (
+                                <span key={t} className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
+                              ))}
+                            </div>
                           </button>
                         ))}
                       </div>
@@ -123,7 +129,12 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
                 {/* Answer */}
                 <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin">
                   <div className="rounded-lg bg-muted/40 p-3 text-sm text-foreground/90">
-                    <div className="mb-1 text-xs text-muted-foreground">{ver}</div>
+                    <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                      <span className="text-xs text-muted-foreground">{ver}</span>
+                      {currentVer.tags.map((t) => (
+                        <span key={t} className="rounded border border-border bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
+                      ))}
+                    </div>
                     <p className="whitespace-pre-wrap leading-relaxed">{reply}</p>
                   </div>
                   <div className="mt-2 flex gap-1">

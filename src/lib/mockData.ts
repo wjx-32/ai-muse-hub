@@ -1,22 +1,64 @@
+export type ModelVersion = {
+  name: string;
+  tags: string[];
+};
+
 export type ModelSeries = {
   id: string;
   name: string;
   vendor: string;
   color: string;
-  versions: string[];
+  versions: ModelVersion[];
   description: string;
+  domestic: boolean;
 };
 
 export const SERIES: ModelSeries[] = [
-  { id: "deepseek", name: "DeepSeek", vendor: "深度求索", color: "#4D6BFE", versions: ["DeepSeek-V3.2", "DeepSeek-V3.1", "DeepSeek-R1"], description: "强推理与代码能力" },
-  { id: "kimi", name: "Kimi", vendor: "月之暗面", color: "#1F1F1F", versions: ["Kimi K2", "Kimi K1.5", "Kimi 探索版"], description: "长文本与联网搜索" },
-  { id: "claude", name: "Claude", vendor: "Anthropic", color: "#D97757", versions: ["Claude Sonnet 4.5", "Claude Opus 4", "Claude Haiku 4"], description: "高质量写作与分析" },
-  { id: "gemini", name: "Gemini", vendor: "Google", color: "#1A73E8", versions: ["Gemini 3 Pro", "Gemini 2.5 Pro", "Gemini 2.5 Flash"], description: "多模态全能模型" },
-  { id: "zhipu", name: "智谱", vendor: "智谱 AI", color: "#3859FF", versions: ["GLM-4.6", "GLM-4-Plus", "GLM-Zero"], description: "中文场景表现优秀" },
-  { id: "qwen", name: "Qwen", vendor: "通义千问", color: "#615CED", versions: ["Qwen3-Max", "Qwen3-235B", "QwQ-32B"], description: "开源旗舰大模型" },
-  { id: "doubao", name: "豆包", vendor: "字节跳动", color: "#0066FF", versions: ["豆包 1.6 Pro", "豆包 1.5 Pro", "豆包 Lite"], description: "速度快、性价比高" },
-  { id: "openai", name: "OpenAI", vendor: "OpenAI", color: "#10A37F", versions: ["GPT-5.2", "GPT-5", "GPT-4o"], description: "通用能力业界标杆" },
-  { id: "grok", name: "Grok", vendor: "xAI", color: "#000000", versions: ["Grok 4", "Grok 3", "Grok 2"], description: "实时信息与幽默风格" },
+  { id: "deepseek", name: "DeepSeek", vendor: "深度求索", color: "#4D6BFE", domestic: true, description: "强推理与代码能力", versions: [
+    { name: "DeepSeek-V3.2", tags: ["通用模型", "国内模型"] },
+    { name: "DeepSeek-V3.1", tags: ["通用模型", "国内模型"] },
+    { name: "DeepSeek-R1", tags: ["推理模型", "国内模型"] },
+  ]},
+  { id: "kimi", name: "Kimi", vendor: "月之暗面", color: "#1F1F1F", domestic: true, description: "长文本与联网搜索", versions: [
+    { name: "Kimi K2", tags: ["长文本", "国内模型"] },
+    { name: "Kimi K1.5", tags: ["推理模型", "国内模型"] },
+    { name: "Kimi 探索版", tags: ["联网搜索", "国内模型"] },
+  ]},
+  { id: "claude", name: "Claude", vendor: "Anthropic", color: "#D97757", domestic: false, description: "高质量写作与分析", versions: [
+    { name: "Claude Sonnet 4.5", tags: ["通用模型", "海外模型"] },
+    { name: "Claude Opus 4", tags: ["旗舰模型", "海外模型"] },
+    { name: "Claude Haiku 4", tags: ["轻量快速", "海外模型"] },
+  ]},
+  { id: "gemini", name: "Gemini", vendor: "Google", color: "#1A73E8", domestic: false, description: "多模态全能模型", versions: [
+    { name: "Gemini 3 Pro", tags: ["多模态", "海外模型"] },
+    { name: "Gemini 2.5 Pro", tags: ["多模态", "海外模型"] },
+    { name: "Gemini 2.5 Flash", tags: ["轻量快速", "海外模型"] },
+  ]},
+  { id: "zhipu", name: "智谱", vendor: "智谱 AI", color: "#3859FF", domestic: true, description: "中文场景表现优秀", versions: [
+    { name: "GLM-4.6", tags: ["通用模型", "国内模型"] },
+    { name: "GLM-4-Plus", tags: ["通用模型", "国内模型"] },
+    { name: "GLM-Zero", tags: ["推理模型", "国内模型"] },
+  ]},
+  { id: "qwen", name: "Qwen", vendor: "通义千问", color: "#615CED", domestic: true, description: "开源旗舰大模型", versions: [
+    { name: "Qwen3-Max", tags: ["旗舰模型", "国内模型"] },
+    { name: "Qwen3-235B", tags: ["开源模型", "国内模型"] },
+    { name: "QwQ-32B", tags: ["推理模型", "开源模型"] },
+  ]},
+  { id: "doubao", name: "豆包", vendor: "字节跳动", color: "#0066FF", domestic: true, description: "速度快、性价比高", versions: [
+    { name: "豆包 1.6 Pro", tags: ["通用模型", "国内模型"] },
+    { name: "豆包 1.5 Pro", tags: ["通用模型", "国内模型"] },
+    { name: "豆包 Lite", tags: ["轻量快速", "国内模型"] },
+  ]},
+  { id: "openai", name: "OpenAI", vendor: "OpenAI", color: "#10A37F", domestic: false, description: "通用能力业界标杆", versions: [
+    { name: "GPT-5.2", tags: ["旗舰模型", "海外模型"] },
+    { name: "GPT-5", tags: ["通用模型", "海外模型"] },
+    { name: "GPT-4o", tags: ["多模态", "海外模型"] },
+  ]},
+  { id: "grok", name: "Grok", vendor: "xAI", color: "#000000", domestic: false, description: "实时信息与幽默风格", versions: [
+    { name: "Grok 4", tags: ["联网搜索", "海外模型"] },
+    { name: "Grok 3", tags: ["通用模型", "海外模型"] },
+    { name: "Grok 2", tags: ["通用模型", "海外模型"] },
+  ]},
 ];
 
 export const SAMPLE_REPLIES: Record<string, string[]> = {
@@ -110,14 +152,14 @@ export const DRAW_RECORDS: DrawRecord[] = [
 ];
 
 export const DRAW_MODELS = [
-  { id: "nano-pro", name: "Nano Banana Pro", vendor: "Google" },
-  { id: "nano", name: "Nano Banana", vendor: "Google" },
-  { id: "sdxl", name: "Stable Diffusion XL", vendor: "Stability AI" },
-  { id: "flux", name: "Flux 1.1 Pro", vendor: "Black Forest Labs" },
-  { id: "mj", name: "Midjourney v7", vendor: "Midjourney" },
-  { id: "wanxiang", name: "通义万相 2.5", vendor: "阿里云" },
-  { id: "doubao-img", name: "豆包·绘图 3.0", vendor: "字节跳动" },
-  { id: "kolors", name: "可图 Kolors", vendor: "快手" },
+  { id: "nano-pro", name: "Nano Banana Pro", vendor: "Google", color: "#1A73E8", letter: "N" },
+  { id: "nano", name: "Nano Banana", vendor: "Google", color: "#FBBC04", letter: "N" },
+  { id: "sdxl", name: "Stable Diffusion XL", vendor: "Stability AI", color: "#7C3AED", letter: "S" },
+  { id: "flux", name: "Flux 1.1 Pro", vendor: "Black Forest Labs", color: "#0F172A", letter: "F" },
+  { id: "mj", name: "Midjourney v7", vendor: "Midjourney", color: "#5865F2", letter: "M" },
+  { id: "wanxiang", name: "通义万相 2.5", vendor: "阿里云", color: "#FF6A00", letter: "万" },
+  { id: "doubao-img", name: "豆包·绘图 3.0", vendor: "字节跳动", color: "#0066FF", letter: "豆" },
+  { id: "kolors", name: "可图 Kolors", vendor: "快手", color: "#FF5C00", letter: "K" },
 ];
 
 export const RATIOS = ["1:1", "3:2", "2:3", "16:9", "9:16", "4:3"];

@@ -4,7 +4,7 @@ import { ChatHome } from "@/components/app/ChatHome";
 import { ChatCompare } from "@/components/app/ChatCompare";
 import { DrawPanel } from "@/components/app/DrawPanel";
 import { DrawGallery } from "@/components/app/DrawGallery";
-import { SERIES } from "@/lib/mockData";
+import { CHAT_HISTORY } from "@/lib/mockData";
 import { toast } from "sonner";
 
 type Mode = "chat" | "draw";
@@ -37,6 +37,17 @@ const Index = () => {
     setView("compare");
   };
 
+  const handleSelectItem = (id: string) => {
+    setActiveId(id);
+    if (mode === "chat") {
+      const item = CHAT_HISTORY.find((c) => c.id === id);
+      if (item) {
+        setQuestion(item.title);
+        setView("compare");
+      }
+    }
+  };
+
   const handleNew = () => {
     if (mode === "chat") {
       setView("home");
@@ -57,7 +68,7 @@ const Index = () => {
           setView("home");
         }}
         activeId={activeId}
-        onSelectItem={setActiveId}
+        onSelectItem={handleSelectItem}
         onNew={handleNew}
       />
 

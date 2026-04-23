@@ -12,6 +12,7 @@ interface Props {
 export function DrawPanel({ onGenerate }: Props) {
   const [prompt, setPrompt] = useState("");
   const [count, setCount] = useState(2);
+  const MAX_COUNT = 8;
   const [ratio, setRatio] = useState("1:1");
   const [resolution, setResolution] = useState("1024×1024");
   const [models, setModels] = useState<string[]>(["nano-pro"]);
@@ -54,12 +55,12 @@ export function DrawPanel({ onGenerate }: Props) {
         <div>
           <div className="mb-1.5 flex items-center justify-between">
             <label className="text-xs font-medium">每个模型生成数量</label>
-            <span className="text-xs text-primary font-semibold">{count}</span>
+            <span className="text-xs text-primary font-semibold">{count} / {MAX_COUNT}</span>
           </div>
           <input
             type="range"
             min={1}
-            max={4}
+            max={MAX_COUNT}
             value={count}
             onChange={(e) => setCount(parseInt(e.target.value))}
             className="w-full accent-[hsl(var(--primary))]"
@@ -122,12 +123,18 @@ export function DrawPanel({ onGenerate }: Props) {
                     active ? "border-primary bg-primary/5" : "border-border hover:bg-muted"
                   )}
                 >
-                  <div className={cn("flex h-4 w-4 shrink-0 items-center justify-center rounded border", active ? "border-primary bg-primary" : "border-border")}>
-                    {active && <Check className="h-3 w-3 text-primary-foreground" />}
+                  <div
+                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-bold text-white"
+                    style={{ backgroundColor: m.color }}
+                  >
+                    {m.letter}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="truncate font-medium">{m.name}</div>
                     <div className="text-[10px] text-muted-foreground">{m.vendor}</div>
+                  </div>
+                  <div className={cn("flex h-4 w-4 shrink-0 items-center justify-center rounded border", active ? "border-primary bg-primary" : "border-border")}>
+                    {active && <Check className="h-3 w-3 text-primary-foreground" />}
                   </div>
                 </button>
               );
