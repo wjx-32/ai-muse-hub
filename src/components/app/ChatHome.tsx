@@ -114,66 +114,64 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
                 checked ? "border-primary bg-primary/5 shadow-sm" : "border-border"
               )}
             >
-              <div className="flex items-start gap-3">
-                <button onClick={() => handleToggle(s)} className="flex flex-1 items-start gap-3 text-left min-w-0">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold text-white" style={{ backgroundColor: s.color }}>
-                    {s.name[0]}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <h3 className="truncate text-base font-bold">{s.name}</h3>
-                      {checked && (
-                        <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary">
-                          <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
-                        </div>
-                      )}
-                      <span className="ml-1 truncate text-xs text-muted-foreground">{s.vendor}</span>
-                    </div>
-                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground/90">{s.description}</p>
-                  </div>
-                </button>
-
-                {/* Version selector on the right */}
-                <div className="relative shrink-0" ref={open ? dropdownRef : undefined}>
-                  <button
-                    onClick={() => setOpenDropdown(open ? null : s.id)}
-                    className="flex max-w-[140px] items-center gap-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs shadow-sm hover:bg-muted"
-                  >
-                    <span className="truncate font-medium">{v}</span>
-                    <ChevronDown className={cn("h-3 w-3 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
-                  </button>
-                  {open && (
-                    <div className="absolute right-0 top-full z-20 mt-1 w-56 overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-fade-in">
-                      {s.versions.map((ver) => (
-                        <button
-                          key={ver.name}
-                          onClick={() => {
-                            onSetVersion(s.id, ver.name);
-                            setOpenDropdown(null);
-                          }}
-                          className={cn("flex w-full flex-col items-start gap-1 px-3 py-2 text-xs hover:bg-accent", v === ver.name && "bg-accent text-accent-foreground")}
-                        >
-                          <div className="flex w-full items-center justify-between gap-2">
-                            <div className="flex items-center gap-1.5">
-                              <span className="font-medium">{ver.name}</span>
-                              {ver.recommended && (
-                                <span className="inline-flex items-center gap-0.5 rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                                  <Flame className="h-2.5 w-2.5" />推荐
-                                </span>
-                              )}
-                            </div>
-                            {v === ver.name && <Check className="h-3 w-3 shrink-0" />}
-                          </div>
-                          <div className="flex flex-wrap gap-1">
-                            {ver.tags.map((t) => (
-                              <span key={t} className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
-                            ))}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+              <button onClick={() => handleToggle(s)} className="flex w-full items-start gap-3 text-left">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold text-white" style={{ backgroundColor: s.color }}>
+                  {s.name[0]}
                 </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-base font-bold">{s.name}</h3>
+                    {checked && (
+                      <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary">
+                        <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
+                      </div>
+                    )}
+                    <span className="ml-1 truncate text-xs text-muted-foreground">{s.vendor}</span>
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground/90">{s.description}</p>
+                </div>
+              </button>
+
+              {/* Version selector full-width row */}
+              <div className="relative mt-3" ref={open ? dropdownRef : undefined}>
+                <button
+                  onClick={() => setOpenDropdown(open ? null : s.id)}
+                  className="flex w-full items-center justify-between gap-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs shadow-sm hover:bg-muted"
+                >
+                  <span className="truncate font-medium">{v}</span>
+                  <ChevronDown className={cn("h-3 w-3 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
+                </button>
+                {open && (
+                  <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-fade-in">
+                    {s.versions.map((ver) => (
+                      <button
+                        key={ver.name}
+                        onClick={() => {
+                          onSetVersion(s.id, ver.name);
+                          setOpenDropdown(null);
+                        }}
+                        className={cn("flex w-full flex-col items-start gap-1 px-3 py-2 text-xs hover:bg-accent", v === ver.name && "bg-accent text-accent-foreground")}
+                      >
+                        <div className="flex w-full items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium">{ver.name}</span>
+                            {ver.recommended && (
+                              <span className="inline-flex items-center gap-0.5 rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                                <Flame className="h-2.5 w-2.5" />推荐
+                              </span>
+                            )}
+                          </div>
+                          {v === ver.name && <Check className="h-3 w-3 shrink-0" />}
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {ver.tags.map((t) => (
+                            <span key={t} className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
+                          ))}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           );
