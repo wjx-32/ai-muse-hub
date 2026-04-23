@@ -58,13 +58,6 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
 
   return (
     <div className="flex h-full flex-col">
-      {/* Question recap */}
-      <div className="border-b border-border bg-card/50 px-6 py-3">
-        <div className="mx-auto max-w-7xl">
-          <div className="text-xs text-muted-foreground">提问</div>
-          <div className="mt-0.5 text-sm font-medium">{question}</div>
-        </div>
-      </div>
 
       {/* Columns */}
       <div ref={ref} className="flex-1 overflow-hidden">
@@ -73,7 +66,6 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
             const s = SERIES.find((x) => x.id === id)!;
             const ver = versionMap[id] ?? s.versions[0].name;
             const currentVer = s.versions.find((x) => x.name === ver) ?? s.versions[0];
-            const reply = SAMPLE_REPLIES[id]?.[0] ?? "（演示回答）这是该模型的示例输出内容。";
             return (
               <div key={id} className="flex h-full flex-col border-r border-border last:border-r-0">
                 {/* Header */}
