@@ -101,7 +101,7 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
       </div>
 
       {/* Models grid - compact horizontal cards */}
-      <div className="relative grid flex-1 grid-cols-1 gap-2.5 overflow-y-auto pb-4 md:grid-cols-2 scrollbar-thin">
+      <div className="relative grid flex-1 grid-cols-1 gap-2.5 overflow-y-auto pb-4 sm:grid-cols-2 lg:grid-cols-3 scrollbar-thin">
         {filteredSeries.map((s) => {
           const checked = selected.includes(s.id);
           const v = versionMap[s.id] ?? s.versions[0].name;
