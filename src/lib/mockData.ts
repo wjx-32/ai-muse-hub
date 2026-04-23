@@ -83,38 +83,47 @@ export const SERIES: ModelSeries[] = [
 export const SAMPLE_REPLIES: Record<string, string[]> = {
   deepseek: [
     "从工程化角度看,这个问题可以拆为三步:1) 数据清洗 2) 特征构造 3) 模型评估。建议先用 baseline 跑通流程,再做调优。",
-    "推理过程:首先注意题目隐含条件...经过逐步演算,得出答案为 42。",
+    "补充一点:在第 2 步特征构造时,推荐先用相关性矩阵筛掉冗余特征,再考虑做交叉特征。",
+    "如果你想进一步提升,可以引入 LightGBM + Optuna 自动调参,通常能再涨 2~5 个百分点。",
   ],
   kimi: [
     "我帮你联网检索了最新资料。综合来看,目前主流方案有以下几种,各有取舍...",
+    "刚刚又查了下最新的社区讨论,方案 B 在最近半年关注度上涨明显,值得重点评估。",
     "根据上传的长文档,要点如下:① 背景 ② 核心论点 ③ 结论。建议你重点关注第二章。",
   ],
   claude: [
     "这是一个值得深入探讨的问题。让我从几个维度展开分析,首先是历史脉络,其次是当下语境,最后是未来可能性...",
+    "顺着上一轮的思路,我们可以再聚焦到「用户价值」这一核心,看看哪些假设其实并不成立。",
     "我理解你的诉求。从清晰度、严谨度和可读性三方面建议如下重写版本...",
   ],
   gemini: [
     "结合你提供的图文信息,我的分析是:整体构图遵循三分法,主体突出,但背景略显杂乱,可考虑虚化处理。",
+    "进一步看色彩搭配:主色与辅色对比度偏低,建议把辅色饱和度上调约 15% 以增强层次。",
     "可以用一张表格来对比这几种方案 — 维度、成本、延迟、可扩展性,一目了然。",
   ],
   zhipu: [
     "好的,我用中文场景给你解释。这个概念在国内常被翻译为「检索增强生成」,在企业知识库中应用广泛。",
+    "在中文语料场景下,建议优先选用 BGE 或 M3E 作为向量化模型,效果通常优于通用英文模型。",
     "依据《...》这部经典,我们可以这样理解题主提出的问题。",
   ],
   qwen: [
     "作为开源模型,我建议你可以在本地部署 7B 量化版本进行测试,显存需求约 8GB。",
+    "如果显存吃紧,可以考虑 GGUF Q4_K_M 量化,推理速度和质量都能取得不错平衡。",
     "代码示例如下,已经过 lint 检查:\n```python\ndef solve(x):\n    return x * 2\n```",
   ],
   doubao: [
     "来啦!简单几句给你说清楚:核心原理就是把大问题切成小问题,逐个击破,效率拉满。",
+    "再给你举个生活化的例子:就像收拾房间,一次清一个区域,比一次性翻箱倒柜轻松多啦。",
     "推荐三个实用 tips:省时、省心、省力,亲测有效~",
   ],
   openai: [
     "Great question. Let me break this down into three layers: foundation, application, and edge cases. Here's a structured walkthrough...",
+    "Building on that, the most common pitfall is over-optimizing the foundation layer before validating the application layer.",
     "I'll provide a comprehensive answer covering the technical, practical, and strategic considerations.",
   ],
   grok: [
     "Based on the latest chatter on X, the consensus seems to be... but let's not take that at face value 😏",
+    "再补一刀:大多数热门观点其实只看了表面数据,真正有意思的信号藏在评论区里。",
     "Hot take: 大多数人都搞错了重点。真正的关键不在 A,而在 B。原因如下...",
   ],
 };
