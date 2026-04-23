@@ -114,18 +114,23 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
                 checked ? "border-primary bg-primary/5 shadow-sm" : "border-border"
               )}
             >
-              <button onClick={() => handleToggle(s)} className="flex w-full items-start gap-3 text-left">
+              {/* Top-right checkbox - always visible */}
+              <div
+                className={cn(
+                  "absolute right-3 top-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all",
+                  checked ? "border-primary bg-primary" : "border-muted-foreground/40 bg-background"
+                )}
+              >
+                {checked && <Check className="h-3 w-3 text-primary-foreground" strokeWidth={3} />}
+              </div>
+
+              <button onClick={() => handleToggle(s)} className="flex w-full items-start gap-3 pr-7 text-left">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold text-white" style={{ backgroundColor: s.color }}>
                   {s.name[0]}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5">
                     <h3 className="text-base font-bold">{s.name}</h3>
-                    {checked && (
-                      <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary">
-                        <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
-                      </div>
-                    )}
                     <span className="ml-1 truncate text-xs text-muted-foreground">{s.vendor}</span>
                   </div>
                   <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground/90">{s.description}</p>
