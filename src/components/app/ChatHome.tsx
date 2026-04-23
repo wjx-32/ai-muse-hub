@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Check, X, Search, Paperclip, Send, Globe, Sparkles } from "lucide-react";
+import { ChevronDown, Check, X, Paperclip, Send, Globe, Sparkles } from "lucide-react";
 import { SERIES, type ModelSeries } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -66,7 +66,8 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
       <div className="relative grid flex-1 grid-cols-1 gap-3 overflow-y-auto pb-4 sm:grid-cols-2 lg:grid-cols-3 scrollbar-thin">
         {SERIES.map((s) => {
           const checked = selected.includes(s.id);
-          const v = versionMap[s.id] ?? s.versions[0];
+          const v = versionMap[s.id] ?? s.versions[0].name;
+          const currentVer = s.versions.find((x) => x.name === v) ?? s.versions[0];
           const open = openDropdown === s.id;
           return (
             <div
@@ -106,19 +107,34 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
                   <span className="truncate">{v}</span>
                   <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", open && "rotate-180")} />
                 </button>
+                {/* Tags row */}
+                <div className="mt-1.5 flex flex-wrap gap-1">
+                  {currentVer.tags.map((t) => (
+                    <span key={t} className="rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                      {t}
+                    </span>
+                  ))}
+                </div>
                 {open && (
                   <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-fade-in">
                     {s.versions.map((ver) => (
                       <button
-                        key={ver}
+                        key={ver.name}
                         onClick={() => {
-                          onSetVersion(s.id, ver);
+                          onSetVersion(s.id, ver.name);
                           setOpenDropdown(null);
                         }}
-                        className={cn("flex w-full items-center justify-between px-3 py-2 text-xs hover:bg-accent", v === ver && "bg-accent text-accent-foreground")}
+                        className={cn("flex w-full flex-col items-start gap-1 px-3 py-2 text-xs hover:bg-accent", v === ver.name && "bg-accent text-accent-foreground")}
                       >
-                        {ver}
-                        {v === ver && <Check className="h-3 w-3" />}
+                        <div className="flex w-full items-center justify-between">
+                          <span className="font-medium">{ver.name}</span>
+                          {v === ver.name && <Check className="h-3 w-3" />}
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {ver.tags.map((t) => (
+                            <span key={t} className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
+                          ))}
+                        </div>
                       </button>
                     ))}
                   </div>
@@ -135,10 +151,13 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
         <div className="mb-2 flex flex-wrap items-center gap-2">
           {selected.map((id) => {
             const s = SERIES.find((x) => x.id === id)!;
+            const ver = versionMap[id] ?? s.versions[0].name;
             return (
               <span key={id} className="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground">
                 <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />
-                {s.name}
+                <span className="font-medium">{s.name}</span>
+                <span className="text-muted-foreground">·</span>
+                <span className="text-muted-foreground">{ver}</span>
                 <button onClick={() => onToggle(id)} className="rounded-full hover:bg-foreground/10">
                   <X className="h-3 w-3" />
                 </button>
@@ -175,9 +194,6 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
             </button>
             <button className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted">
               <Paperclip className="h-3 w-3" /> 附件
-            </button>
-            <button className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted">
-              <Search className="h-3 w-3" /> 模板
             </button>
             <Button size="sm" onClick={send} disabled={!input.trim() || selected.length === 0} className="ml-auto bg-gradient-primary text-primary-foreground hover:opacity-90 disabled:opacity-40">
               <Send className="h-3.5 w-3.5" />
