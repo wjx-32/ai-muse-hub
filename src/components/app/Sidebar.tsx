@@ -54,13 +54,15 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
         </button>
       </div>
 
-      {/* New button */}
-      <div className="px-3">
-        <Button onClick={onNew} className="w-full justify-start gap-2 bg-gradient-primary text-primary-foreground hover:opacity-90" size="sm">
-          <Plus className="h-4 w-4" />
-          {mode === "chat" ? "新建对话" : "新建绘图"}
-        </Button>
-      </div>
+      {/* 仅对话模式：新建对话（绘图在右侧面板操作，不单独放侧栏入口） */}
+      {mode === "chat" && (
+        <div className="px-3">
+          <Button onClick={onNew} className="w-full justify-start gap-2 bg-gradient-primary text-primary-foreground hover:opacity-90" size="sm">
+            <Plus className="h-4 w-4" />
+            新建对话
+          </Button>
+        </div>
+      )}
 
       {/* List */}
       <div className="mt-4 flex-1 overflow-y-auto px-2 scrollbar-thin">

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, X, Send, Globe, Paperclip, Copy, RefreshCw, ThumbsUp, Flame, User } from "lucide-react";
+import { ChevronDown, X, Send, Globe, Paperclip, Copy, RefreshCw, Flame, User } from "lucide-react";
 import { SERIES, SAMPLE_REPLIES } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -190,9 +190,12 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
                             <p className="whitespace-pre-wrap leading-relaxed">{turn.replies[id] ?? "（演示回答）"}</p>
                           </div>
                           <div className="mt-1.5 flex gap-1">
-                            <button className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"><Copy className="h-3.5 w-3.5" /></button>
-                            <button className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"><RefreshCw className="h-3.5 w-3.5" /></button>
-                            <button className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground"><ThumbsUp className="h-3.5 w-3.5" /></button>
+                            <button type="button" className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label="复制">
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+                            <button type="button" className="rounded-md p-1 text-muted-foreground hover:bg-muted hover:text-foreground" aria-label="重新生成">
+                              <RefreshCw className="h-3.5 w-3.5" />
+                            </button>
                           </div>
                         </div>
                       </div>

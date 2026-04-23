@@ -49,14 +49,9 @@ const Index = () => {
   };
 
   const handleNew = () => {
-    if (mode === "chat") {
-      setView("home");
-      setQuestion("");
-      setActiveId(null);
-    } else {
-      setActiveId(null);
-      toast.success("已新建绘图任务");
-    }
+    setView("home");
+    setQuestion("");
+    setActiveId(null);
   };
 
   return (

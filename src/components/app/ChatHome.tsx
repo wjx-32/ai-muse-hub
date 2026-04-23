@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown, Check, X, Paperclip, Send, Globe, Sparkles, Flame } from "lucide-react";
 import { SERIES, MODEL_CATEGORIES, type ModelSeries } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface Props {
   selected: string[];
@@ -21,29 +23,26 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
   const [shake, setShake] = useState(false);
   const [web, setWeb] = useState(false);
   const [category, setCategory] = useState<string>("all");
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setOpenDropdown(null);
-      }
-    };
-    document.addEventListener("mousedown", onClick);
-    return () => document.removeEventListener("mousedown", onClick);
-  }, []);
+    setOpenDropdown(null);
+  }, [category]);
 
   const handleToggle = (s: ModelSeries) => {
     if (!selected.includes(s.id) && selected.length >= MAX) {
       setShake(true);
       setTimeout(() => setShake(false), 500);
+      toast.warning("最多选择 3 个模型", { description: "请先取消一个已选模型，再选择其他系列。" });
       return;
     }
     onToggle(s.id);
   };
 
   const send = () => {
-    if (!input.trim() || selected.length === 0) return;
+    if (!input.trim()) return;
+    if (selected.length === 0) {
+      toast.warning("请先选择模型", { description: "在上方至少勾选一个模型系列后再发送。" });
+      return;
+    }
     onSend(input.trim());
   };
 
@@ -63,181 +62,206 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
   }, [category]);
 
   return (
-    <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-5">
+    <div className="relative mx-auto flex h-full min-h-0 w-full max-w-5xl flex-col px-6 py-5">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-glow" />
 
-      {/* Hero */}
-      <div className="relative mb-4 text-center animate-fade-in">
-        <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/50 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
-          <Sparkles className="h-3 w-3 text-primary" />
-          多模型并行对比 · 一次提问 · 三方解答
-        </div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-          选择模型,开启 <span className="text-gradient">智能对话</span>
-        </h1>
-        <p className="mt-1.5 text-xs text-muted-foreground">最多同时选择 {MAX} 个模型系列进行对比</p>
-      </div>
-
-      {/* Category filter */}
-      <div className="relative mb-3 flex flex-wrap items-center justify-center gap-1.5">
-        {MODEL_CATEGORIES.map((c) => {
-          const active = category === c.id;
-          return (
-            <button
-              key={c.id}
-              onClick={() => setCategory(c.id)}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-all",
-                active
-                  ? "border-primary bg-gradient-primary text-primary-foreground shadow-sm"
-                  : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
-              <span className="text-sm leading-none">{c.emoji}</span>
-              {c.name}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Models grid - compact horizontal cards */}
-      <div className="relative grid flex-1 auto-rows-min grid-cols-1 content-start gap-2.5 overflow-y-auto pb-4 sm:grid-cols-2 lg:grid-cols-3 scrollbar-thin">
-        {filteredSeries.map((s) => {
-          const checked = selected.includes(s.id);
-          const v = versionMap[s.id] ?? s.versions[0].name;
-          const open = openDropdown === s.id;
-          return (
-            <div
-              key={s.id}
-              className={cn(
-                "group relative rounded-2xl border bg-card p-4 transition-all hover:shadow-md",
-                checked ? "border-primary bg-primary/5 shadow-sm" : "border-border"
-              )}
-            >
-              {/* Top-right checkbox - always visible */}
-              <div
-                className={cn(
-                  "absolute right-3 top-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all",
-                  checked ? "border-primary bg-primary" : "border-muted-foreground/40 bg-background"
-                )}
-              >
-                {checked && <Check className="h-3 w-3 text-primary-foreground" strokeWidth={3} />}
-              </div>
-
-              <button onClick={() => handleToggle(s)} className="flex w-full items-start gap-3 pr-7 text-left">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold text-white" style={{ backgroundColor: s.color }}>
-                  {s.name[0]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="text-base font-bold">{s.name}</h3>
-                    <span className="ml-1 truncate text-xs text-muted-foreground">{s.vendor}</span>
-                  </div>
-                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground/90">{s.description}</p>
-                </div>
-              </button>
-
-              {/* Version selector full-width row */}
-              <div className="relative mt-3" ref={open ? dropdownRef : undefined}>
-                <button
-                  onClick={() => setOpenDropdown(open ? null : s.id)}
-                  className="flex w-full items-center justify-between gap-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs shadow-sm hover:bg-muted"
-                >
-                  <span className="truncate font-medium">{v}</span>
-                  <ChevronDown className={cn("h-3 w-3 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
-                </button>
-                {open && (
-                  <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-fade-in">
-                    {s.versions.map((ver) => (
-                      <button
-                        key={ver.name}
-                        onClick={() => {
-                          onSetVersion(s.id, ver.name);
-                          setOpenDropdown(null);
-                        }}
-                        className={cn("flex w-full flex-col items-start gap-1 px-3 py-2 text-xs hover:bg-accent", v === ver.name && "bg-accent text-accent-foreground")}
-                      >
-                        <div className="flex w-full items-center justify-between gap-2">
-                          <div className="flex items-center gap-1.5">
-                            <span className="font-medium">{ver.name}</span>
-                            {ver.recommended && (
-                              <span className="inline-flex items-center gap-0.5 rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                                <Flame className="h-2.5 w-2.5" />推荐
-                              </span>
-                            )}
-                          </div>
-                          {v === ver.name && <Check className="h-3 w-3 shrink-0" />}
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          {ver.tags.map((t) => (
-                            <span key={t} className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
-                          ))}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+      {/* 上标题 / 中模型网格 / 下输入区：只让中间随筛选变化并滚动，头尾位置固定 */}
+      <div className="relative z-[1] flex min-h-0 flex-1 flex-col">
+        <div className="shrink-0">
+          <div className="relative mb-4 text-center animate-fade-in">
+            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/50 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
+              <Sparkles className="h-3 w-3 text-primary" />
+              多模型并行对比 · 一次提问 · 三方解答
             </div>
-          );
-        })}
-      </div>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              选择模型,开启 <span className="text-gradient">智能对话</span>
+            </h1>
+            <p className="mt-1.5 text-xs text-muted-foreground">最多同时选择 {MAX} 个模型系列进行对比</p>
+          </div>
 
-      {/* Input bar */}
-      <div className="relative mt-4">
-        {/* chips + counter */}
-        <div className="mb-2 flex flex-wrap items-center gap-2">
-          {selected.map((id) => {
-            const s = SERIES.find((x) => x.id === id)!;
-            const ver = versionMap[id] ?? s.versions[0].name;
-            return (
-              <span key={id} className="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground">
-                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />
-                <span className="font-medium">{s.name}</span>
-                <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground">{ver}</span>
-                <button onClick={() => onToggle(id)} className="rounded-full hover:bg-foreground/10">
-                  <X className="h-3 w-3" />
+          <div className="relative mb-3 flex flex-wrap items-center justify-center gap-1.5">
+            {MODEL_CATEGORIES.map((c) => {
+              const active = category === c.id;
+              return (
+                <button
+                  key={c.id}
+                  onClick={() => setCategory(c.id)}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-all",
+                    active
+                      ? "border-primary bg-gradient-primary text-primary-foreground shadow-sm"
+                      : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
+                  )}
+                >
+                  <span className="text-sm leading-none">{c.emoji}</span>
+                  {c.name}
                 </button>
-              </span>
-            );
-          })}
-          <span className={cn("ml-auto text-xs text-muted-foreground", shake && "animate-shake text-destructive font-medium")}>
-            {selected.length} / {MAX}
-          </span>
-        </div>
-
-        <div className="rounded-2xl border border-border bg-card p-2 shadow-md focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
-          <Textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                send();
-              }
-            }}
-            placeholder={selected.length ? "输入你的问题,Enter 发送..." : "请先在上方选择至少一个模型"}
-            className="min-h-[60px] resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"
-          />
-          <div className="flex items-center gap-1 px-1 pt-1">
-            <button
-              onClick={() => setWeb((w) => !w)}
-              className={cn(
-                "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors",
-                web ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted"
-              )}
-            >
-              <Globe className="h-3 w-3" /> 联网
-            </button>
-            <button className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted">
-              <Paperclip className="h-3 w-3" /> 附件
-            </button>
-            <Button size="sm" onClick={send} disabled={!input.trim() || selected.length === 0} className="ml-auto bg-gradient-primary text-primary-foreground hover:opacity-90 disabled:opacity-40">
-              <Send className="h-3.5 w-3.5" />
-            </Button>
+              );
+            })}
           </div>
         </div>
+
+        <div className="shrink-0 max-h-[min(52vh,30rem)] overflow-y-auto overflow-x-hidden overscroll-contain py-0.5 scrollbar-thin">
+          <div className="grid auto-rows-min grid-cols-1 content-start gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                {filteredSeries.map((s) => {
+                  const checked = selected.includes(s.id);
+                  const v = versionMap[s.id] ?? s.versions[0].name;
+                  const open = openDropdown === s.id;
+                  return (
+                    <div
+                      key={s.id}
+                      className={cn(
+                        "group relative rounded-2xl border bg-card p-4 transition-all hover:shadow-md",
+                        checked ? "border-primary bg-primary/5 shadow-sm" : "border-border"
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "pointer-events-none absolute right-3 top-3 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
+                          checked ? "border-primary bg-primary" : "border-muted-foreground/40 bg-background"
+                        )}
+                        aria-hidden
+                      >
+                        {checked && <Check className="h-3 w-3 text-primary-foreground" strokeWidth={3} />}
+                      </div>
+                      <button
+                        onClick={() => handleToggle(s)}
+                        className="flex w-full items-start gap-3 pr-7 text-left"
+                        type="button"
+                      >
+                        <div
+                          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold text-white"
+                          style={{ backgroundColor: s.color }}
+                        >
+                          {s.name[0]}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <h3 className="text-base font-bold">{s.name}</h3>
+                            <span className="ml-1 truncate text-xs text-muted-foreground">{s.vendor}</span>
+                          </div>
+                          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground/90">{s.description}</p>
+                        </div>
+                      </button>
+
+                      <div className="relative mt-3">
+                        <Popover open={open} onOpenChange={(next) => setOpenDropdown(next ? s.id : null)}>
+                          <PopoverTrigger asChild>
+                            <button
+                              type="button"
+                              className="flex w-full items-center justify-between gap-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs shadow-sm hover:bg-muted"
+                            >
+                              <span className="truncate font-medium">{v}</span>
+                              <ChevronDown className={cn("h-3 w-3 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
+                            </button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            align="start"
+                            side="bottom"
+                            sideOffset={6}
+                            className="z-[120] w-[var(--radix-popover-trigger-width)] overflow-hidden rounded-md border border-border bg-popover p-0 shadow-lg animate-fade-in"
+                          >
+                            {s.versions.map((ver) => (
+                              <button
+                                key={ver.name}
+                                onClick={() => {
+                                  onSetVersion(s.id, ver.name);
+                                  setOpenDropdown(null);
+                                }}
+                                className={cn(
+                                  "flex w-full flex-col items-start gap-1 px-3 py-2 text-xs hover:bg-accent",
+                                  v === ver.name && "bg-accent text-accent-foreground"
+                                )}
+                              >
+                                <div className="flex w-full items-center justify-between gap-2">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="font-medium">{ver.name}</span>
+                                    {ver.recommended && (
+                                      <span className="inline-flex items-center gap-0.5 rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                                        <Flame className="h-2.5 w-2.5" />
+                                        推荐
+                                      </span>
+                                    )}
+                                  </div>
+                                  {v === ver.name && <Check className="h-3 w-3 shrink-0" />}
+                                </div>
+                                <div className="flex flex-wrap gap-1">
+                                  {ver.tags.map((t) => (
+                                    <span key={t} className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                                      {t}
+                                    </span>
+                                  ))}
+                                </div>
+                              </button>
+                            ))}
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                    </div>
+                  );
+                })}
+          </div>
+        </div>
+
+        <div className="relative mt-3 shrink-0">
+            <div className="mb-2 flex flex-wrap items-center gap-2">
+              {selected.map((id) => {
+                const s = SERIES.find((x) => x.id === id)!;
+                const ver = versionMap[id] ?? s.versions[0].name;
+                return (
+                  <span key={id} className="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-xs text-accent-foreground">
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: s.color }} />
+                    <span className="font-medium">{s.name}</span>
+                    <span className="text-muted-foreground">·</span>
+                    <span className="text-muted-foreground">{ver}</span>
+                    <button onClick={() => onToggle(id)} className="rounded-full hover:bg-foreground/10">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </span>
+                );
+              })}
+              <span className={cn("ml-auto text-xs text-muted-foreground", shake && "animate-shake font-medium text-destructive")}>
+                {selected.length} / {MAX}
+              </span>
+            </div>
+
+            <div className="rounded-2xl border border-border bg-card p-2 shadow-md focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+              <Textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    send();
+                  }
+                }}
+                placeholder={selected.length ? "输入你的问题,Enter 发送..." : "请先在上方选择至少一个模型"}
+                className="min-h-[60px] resize-none border-0 bg-transparent p-2 text-sm shadow-none focus-visible:ring-0"
+              />
+              <div className="flex items-center gap-1 px-1 pt-1">
+                <button
+                  onClick={() => setWeb((w) => !w)}
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs transition-colors",
+                    web ? "border-primary bg-primary/10 text-primary" : "border-border text-muted-foreground hover:bg-muted"
+                  )}
+                >
+                  <Globe className="h-3 w-3" /> 联网
+                </button>
+                <button className="inline-flex items-center gap-1 rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted">
+                  <Paperclip className="h-3 w-3" /> 附件
+                </button>
+                <Button
+                  size="sm"
+                  onClick={send}
+                  disabled={!input.trim()}
+                  className="ml-auto bg-gradient-primary text-primary-foreground hover:opacity-90 disabled:opacity-40"
+                >
+                  <Send className="h-3.5 w-3.5" />
+                </Button>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   );
