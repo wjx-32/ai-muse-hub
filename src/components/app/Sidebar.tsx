@@ -127,10 +127,6 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
           <div className="flex-1 min-w-0">
             <div className="truncate text-sm font-medium">林子涵</div>
             <div className="truncate text-[11px] text-muted-foreground">锐竞信息</div>
-            <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
-              <span className="truncate">Pro 会员 · 已登录</span>
-            </div>
           </div>
           <button onClick={toggle} className="shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-sidebar-accent hover:text-foreground" aria-label="切换主题">
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
