@@ -98,7 +98,7 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
               <span className="text-base font-bold text-primary">50</span>
             </div>
           </div>
-          <Star className="pointer-events-none absolute -right-2 -bottom-2 h-12 w-12 fill-yellow-400 text-yellow-400 opacity-80" />
+          <Star className="pointer-events-none absolute -right-2 -bottom-2 h-12 w-12 opacity-80" style={{ fill: "hsl(45 95% 60%)", color: "hsl(45 95% 60%)" }} />
         </div>
 
         {/* User row */}
