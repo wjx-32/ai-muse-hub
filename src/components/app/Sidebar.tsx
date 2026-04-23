@@ -1,4 +1,5 @@
-import { Plus, MessageSquare, ImageIcon, Settings, Sun, Moon, Sparkles, MessagesSquare, Palette } from "lucide-react";
+import { Plus, MessageSquare, ImageIcon, Settings, Sun, Moon, Sparkles, MessagesSquare, Palette, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { CHAT_HISTORY, DRAW_RECORDS } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
@@ -85,8 +86,22 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
       {/* Credits cards */}
       <div className="border-t border-sidebar-border p-3 space-y-2">
         <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 to-transparent p-2.5">
-          <div className="mb-2 inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
-            <Sparkles className="h-2.5 w-2.5" /> 体验版本
+          <div className="mb-2 flex items-center justify-between">
+            <div className="inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
+              <Sparkles className="h-2.5 w-2.5" /> 免费额度
+            </div>
+            <TooltipProvider delayDuration={100}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="text-muted-foreground hover:text-foreground" aria-label="额度规则">
+                    <Info className="h-3.5 w-3.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[220px] text-xs leading-relaxed">
+                  每月免费赠送 200 次对话、100 次绘图额度，次数于每月 1 日重置，当月有效，月底清空。
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <div className="grid grid-cols-2 gap-2">
             <div className="rounded-lg border border-border bg-background/60 p-2">
