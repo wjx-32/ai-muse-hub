@@ -110,26 +110,26 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
             <div
               key={s.id}
               className={cn(
-                "group relative rounded-xl border bg-card p-3 transition-all hover:shadow-md",
-                checked ? "border-primary ring-2 ring-primary/20 shadow-sm" : "border-border"
+                "group relative rounded-2xl border bg-card p-4 transition-all hover:shadow-md",
+                checked ? "border-primary bg-primary/5 shadow-sm" : "border-border"
               )}
             >
               <div className="flex items-start gap-3">
                 <button onClick={() => handleToggle(s)} className="flex flex-1 items-start gap-3 text-left min-w-0">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white" style={{ backgroundColor: s.color }}>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-base font-bold text-white" style={{ backgroundColor: s.color }}>
                     {s.name[0]}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <h3 className="truncate text-sm font-semibold">{s.name}</h3>
+                      <h3 className="truncate text-base font-bold">{s.name}</h3>
                       {checked && (
                         <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary">
-                          <Check className="h-2.5 w-2.5 text-primary-foreground" />
+                          <Check className="h-2.5 w-2.5 text-primary-foreground" strokeWidth={3} />
                         </div>
                       )}
-                      <span className="ml-1 truncate text-[11px] text-muted-foreground">{s.vendor}</span>
+                      <span className="ml-1 truncate text-xs text-muted-foreground">{s.vendor}</span>
                     </div>
-                    <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{s.description}</p>
+                    <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground/90">{s.description}</p>
                   </div>
                 </button>
 
@@ -137,7 +137,7 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
                 <div className="relative shrink-0" ref={open ? dropdownRef : undefined}>
                   <button
                     onClick={() => setOpenDropdown(open ? null : s.id)}
-                    className="flex max-w-[120px] items-center gap-1 rounded-full border border-border bg-background/50 px-2.5 py-1 text-xs hover:bg-muted"
+                    className="flex max-w-[140px] items-center gap-1 rounded-full border border-border bg-background px-3 py-1.5 text-xs shadow-sm hover:bg-muted"
                   >
                     <span className="truncate font-medium">{v}</span>
                     <ChevronDown className={cn("h-3 w-3 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
