@@ -71,7 +71,7 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
 
       {/* Columns */}
       <div ref={ref} className="flex-1 overflow-hidden">
-        <div className="grid h-full" style={{ gridTemplateColumns: `repeat(${Math.max(selected.length, 1)}, minmax(0, 1fr))` }}>
+        <div className="mx-auto grid h-full w-full max-w-[1600px]" style={{ gridTemplateColumns: `repeat(${Math.max(selected.length, 1)}, minmax(0, 1fr))` }}>
           {selected.map((id) => {
             const s = SERIES.find((x) => x.id === id)!;
             const ver = versionMap[id] ?? s.versions[0].name;
