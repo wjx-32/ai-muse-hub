@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, X, Send, Globe, Paperclip, Copy, RefreshCw, ThumbsUp, Flame } from "lucide-react";
+import { ChevronDown, X, Send, Globe, Paperclip, Copy, RefreshCw, ThumbsUp, Flame, User } from "lucide-react";
 import { SERIES, SAMPLE_REPLIES } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,11 +15,25 @@ interface Props {
   onSend: (q: string) => void;
 }
 
+type Turn = { q: string; replies: Record<string, string> };
+
 export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSeries, onCloseColumn, question, onSend }: Props) {
   const [followup, setFollowup] = useState("");
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [openSeries, setOpenSeries] = useState<string | null>(null);
+  const [turns, setTurns] = useState<Turn[]>([]);
   const ref = useRef<HTMLDivElement>(null);
+
+  // Reset turns when the initial question changes (new conversation)
+  useEffect(() => {
+    if (!question) return;
+    const replies: Record<string, string> = {};
+    selected.forEach((id) => {
+      replies[id] = SAMPLE_REPLIES[id]?.[0] ?? "（演示回答）这是该模型的示例输出内容。";
+    });
+    setTurns([{ q: question, replies }]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [question]);
 
   useEffect(() => {
     const onClick = (e: MouseEvent) => {
@@ -31,6 +45,16 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  const handleFollowup = (q: string) => {
+    const replies: Record<string, string> = {};
+    selected.forEach((id) => {
+      const list = SAMPLE_REPLIES[id] ?? [];
+      replies[id] = list[turns.length % list.length] ?? list[0] ?? "（演示回答）继续追问的示例输出。";
+    });
+    setTurns((t) => [...t, { q, replies }]);
+    onSend(q);
+  };
 
   return (
     <div className="flex h-full flex-col">
