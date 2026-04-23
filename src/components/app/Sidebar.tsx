@@ -88,7 +88,7 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
         <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 to-transparent p-2.5">
           <div className="mb-2 flex items-center justify-between">
             <div className="inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
-              <Sparkles className="h-2.5 w-2.5" /> 免费额度
+              <Sparkles className="h-2.5 w-2.5" /> 体验版本
             </div>
             <TooltipProvider delayDuration={100}>
               <Tooltip>
