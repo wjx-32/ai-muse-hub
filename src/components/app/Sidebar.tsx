@@ -111,7 +111,8 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
           </div>
           <div className="flex-1 min-w-0">
             <div className="truncate text-sm font-medium">林子涵</div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <div className="truncate text-[11px] text-muted-foreground">锐竞信息</div>
+            <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
               <span className="truncate">Pro 会员 · 已登录</span>
             </div>
