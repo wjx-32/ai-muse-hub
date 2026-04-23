@@ -76,7 +76,7 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
                 )}
               >
                 <div className="line-clamp-1 text-sm">{it.title}</div>
-                <div className="mt-0.5 text-xs text-muted-foreground">{it.sub}</div>
+                {mode === "draw" && <div className="mt-0.5 text-xs text-muted-foreground">{it.sub}</div>}
               </button>
             </li>
           ))}
