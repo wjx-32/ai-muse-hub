@@ -208,7 +208,7 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 if (followup.trim()) {
-                  onSend(followup.trim());
+                  handleFollowup(followup.trim());
                   setFollowup("");
                 }
               }
@@ -227,7 +227,7 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
               size="sm"
               onClick={() => {
                 if (followup.trim()) {
-                  onSend(followup.trim());
+                  handleFollowup(followup.trim());
                   setFollowup("");
                 }
               }}
