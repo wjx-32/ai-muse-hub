@@ -1,4 +1,4 @@
-import { Plus, MessageSquare, ImageIcon, Settings, Sun, Moon, User, Sparkles, Star } from "lucide-react";
+import { Plus, MessageSquare, ImageIcon, Settings, Sun, Moon, Sparkles, MessagesSquare, Palette } from "lucide-react";
 import { CHAT_HISTORY, DRAW_RECORDS } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/hooks/useTheme";
@@ -82,38 +82,44 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
         </ul>
       </div>
 
-      {/* Credits card */}
-      <div className="border-t border-sidebar-border p-3 space-y-3">
-        <div className="relative overflow-hidden rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 via-accent/40 to-transparent p-3">
+      {/* Credits cards */}
+      <div className="border-t border-sidebar-border p-3 space-y-2">
+        <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 to-transparent p-2.5">
           <div className="mb-2 inline-flex items-center gap-1 rounded-md bg-primary px-2 py-0.5 text-[10px] font-semibold text-primary-foreground">
             <Sparkles className="h-2.5 w-2.5" /> 体验版本
           </div>
-          <div className="space-y-1 text-xs">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">剩余对话次数</span>
-              <span className="text-base font-bold text-primary">198</span>
+          <div className="grid grid-cols-2 gap-2">
+            <div className="rounded-lg border border-border bg-background/60 p-2">
+              <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                <MessagesSquare className="h-3 w-3" /> 对话
+              </div>
+              <div className="mt-0.5 text-base font-bold text-primary">198<span className="ml-0.5 text-[10px] font-normal text-muted-foreground">次</span></div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">剩余绘图次数</span>
-              <span className="text-base font-bold text-primary">50</span>
+            <div className="rounded-lg border border-border bg-background/60 p-2">
+              <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                <Palette className="h-3 w-3" /> 绘图
+              </div>
+              <div className="mt-0.5 text-base font-bold text-primary">50<span className="ml-0.5 text-[10px] font-normal text-muted-foreground">次</span></div>
             </div>
           </div>
-          <Star className="pointer-events-none absolute -right-2 -bottom-2 h-12 w-12 opacity-80" style={{ fill: "hsl(45 95% 60%)", color: "hsl(45 95% 60%)" }} />
         </div>
 
-        {/* User row */}
+        {/* User row - logged in */}
         <div className="flex items-center gap-2 rounded-lg p-2 hover:bg-sidebar-accent/60">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground">
-            <User className="h-4 w-4" />
+          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-primary text-xs font-semibold text-primary-foreground">
+            LZ
           </div>
           <div className="flex-1 min-w-0">
-            <div className="truncate text-sm font-medium">访客用户</div>
-            <div className="text-xs text-muted-foreground">点击登录</div>
+            <div className="truncate text-sm font-medium">林子涵</div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
+              <span className="truncate">Pro 会员 · 已登录</span>
+            </div>
           </div>
-          <button onClick={toggle} className="rounded-md p-1.5 text-muted-foreground hover:bg-sidebar-accent hover:text-foreground" aria-label="切换主题">
+          <button onClick={toggle} className="shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-sidebar-accent hover:text-foreground" aria-label="切换主题">
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
-          <button className="rounded-md p-1.5 text-muted-foreground hover:bg-sidebar-accent hover:text-foreground" aria-label="设置">
+          <button className="shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-sidebar-accent hover:text-foreground" aria-label="设置">
             <Settings className="h-4 w-4" />
           </button>
         </div>
