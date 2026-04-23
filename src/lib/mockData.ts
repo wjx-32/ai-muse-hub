@@ -190,4 +190,11 @@ export const CHAT_HISTORY = [
   { id: "c3", title: "解释 Transformer 注意力机制", time: "昨天" },
   { id: "c4", title: "Python 数据清洗脚本", time: "3 天前" },
   { id: "c5", title: "周末徒步路线规划", time: "上周" },
+  { id: "c6", title: "用 Tailwind 实现毛玻璃卡片", time: "上周" },
+  { id: "c7", title: "对比 Postgres 与 MySQL 选型", time: "上周" },
+  { id: "c8", title: "翻译这段英文产品介绍", time: "2 周前" },
+  { id: "c9", title: "写一份产品 Roadmap 模板", time: "2 周前" },
+  { id: "c10", title: "K8s Pod 一直 CrashLoopBackOff 排查", time: "3 周前" },
+  { id: "c11", title: "推荐 5 本机器学习入门书籍", time: "上个月" },
+  { id: "c12", title: "帮我写一首关于秋天的现代诗", time: "上个月" },
 ];
