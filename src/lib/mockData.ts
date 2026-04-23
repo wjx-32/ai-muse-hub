@@ -1,7 +1,26 @@
 export type ModelVersion = {
   name: string;
   tags: string[];
+  recommended?: boolean;
 };
+
+export type ModelCategory = {
+  id: string;
+  name: string;
+  emoji: string;
+  match?: (tag: string) => boolean;
+};
+
+export const MODEL_CATEGORIES: ModelCategory[] = [
+  { id: "all", name: "全部", emoji: "🗂" },
+  { id: "recommend", name: "推荐", emoji: "🔥" },
+  { id: "reasoning", name: "推理模型", emoji: "🧠" },
+  { id: "domestic", name: "国内模型", emoji: "🇨🇳" },
+  { id: "oversea", name: "海外模型", emoji: "🌐" },
+  { id: "multimodal", name: "多模态", emoji: "🖼" },
+  { id: "long", name: "长文本", emoji: "📄" },
+  { id: "flagship", name: "旗舰模型", emoji: "👑" },
+];
 
 export type ModelSeries = {
   id: string;
