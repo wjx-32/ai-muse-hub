@@ -27,11 +27,21 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
   // Reset turns when the initial question changes (new conversation)
   useEffect(() => {
     if (!question) return;
-    const replies: Record<string, string> = {};
+    const followups = ["可以再详细展开一下吗?", "有没有更进一步的优化建议?"];
+    const initialTurns: Turn[] = [{ q: question, replies: {} }];
     selected.forEach((id) => {
-      replies[id] = SAMPLE_REPLIES[id]?.[0] ?? "（演示回答）这是该模型的示例输出内容。";
+      const list = SAMPLE_REPLIES[id] ?? [];
+      initialTurns[0].replies[id] = list[0] ?? "(演示回答)这是该模型的示例输出内容。";
     });
-    setTurns([{ q: question, replies }]);
+    followups.forEach((fq, i) => {
+      const replies: Record<string, string> = {};
+      selected.forEach((id) => {
+        const list = SAMPLE_REPLIES[id] ?? [];
+        replies[id] = list[(i + 1) % Math.max(list.length, 1)] ?? "(演示追问回答)";
+      });
+      initialTurns.push({ q: fq, replies });
+    });
+    setTurns(initialTurns);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
 
