@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Check, X, Paperclip, Send, Globe, Sparkles } from "lucide-react";
-import { SERIES, type ModelSeries } from "@/lib/mockData";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, Check, X, Paperclip, Send, Globe, Sparkles, Flame } from "lucide-react";
+import { SERIES, MODEL_CATEGORIES, type ModelSeries } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,7 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
   const [web, setWeb] = useState(false);
+  const [category, setCategory] = useState<string>("all");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,12 +47,27 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
     onSend(input.trim());
   };
 
+  const filteredSeries = useMemo(() => {
+    if (category === "all") return SERIES;
+    if (category === "recommend") return SERIES;
+    const map: Record<string, string> = {
+      reasoning: "推理模型",
+      domestic: "国内模型",
+      oversea: "海外模型",
+      multimodal: "多模态",
+      long: "长文本",
+      flagship: "旗舰模型",
+    };
+    const tag = map[category];
+    return SERIES.filter((s) => s.versions.some((v) => v.tags.includes(tag)));
+  }, [category]);
+
   return (
-    <div className="relative mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-8">
+    <div className="relative mx-auto flex h-full w-full max-w-7xl flex-col px-6 py-6 2xl:max-w-[1600px]">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-gradient-glow" />
 
       {/* Hero */}
-      <div className="relative mb-8 text-center animate-fade-in">
+      <div className="relative mb-5 text-center animate-fade-in">
         <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/50 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
           <Sparkles className="h-3 w-3 text-primary" />
           多模型并行对比 · 一次提问 · 三方解答
@@ -62,9 +78,31 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
         <p className="mt-2 text-sm text-muted-foreground">最多同时选择 {MAX} 个模型系列进行对比</p>
       </div>
 
+      {/* Category filter */}
+      <div className="relative mb-4 flex flex-wrap items-center justify-center gap-2">
+        {MODEL_CATEGORIES.map((c) => {
+          const active = category === c.id;
+          return (
+            <button
+              key={c.id}
+              onClick={() => setCategory(c.id)}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all",
+                active
+                  ? "border-primary bg-gradient-primary text-primary-foreground shadow-sm"
+                  : "border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <span className="text-sm leading-none">{c.emoji}</span>
+              {c.name}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Models grid */}
-      <div className="relative grid flex-1 grid-cols-1 gap-3 overflow-y-auto pb-4 sm:grid-cols-2 lg:grid-cols-3 scrollbar-thin">
-        {SERIES.map((s) => {
+      <div className="relative grid flex-1 grid-cols-1 gap-3 overflow-y-auto pb-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 scrollbar-thin">
+        {filteredSeries.map((s) => {
           const checked = selected.includes(s.id);
           const v = versionMap[s.id] ?? s.versions[0].name;
           const currentVer = s.versions.find((x) => x.name === v) ?? s.versions[0];
@@ -98,23 +136,22 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
                 </div>
               </button>
 
-              {/* Version selector */}
+              {/* Version selector with tags inside */}
               <div className="relative mt-3" ref={open ? dropdownRef : undefined}>
                 <button
                   onClick={() => setOpenDropdown(open ? null : s.id)}
-                  className="flex w-full items-center justify-between rounded-md border border-border bg-background/50 px-3 py-1.5 text-xs hover:bg-muted"
+                  className="flex w-full items-center gap-2 rounded-md border border-border bg-background/50 px-3 py-1.5 text-xs hover:bg-muted"
                 >
-                  <span className="truncate">{v}</span>
-                  <ChevronDown className={cn("h-3.5 w-3.5 text-muted-foreground transition-transform", open && "rotate-180")} />
+                  <span className="truncate font-medium">{v}</span>
+                  <div className="flex flex-1 flex-wrap items-center gap-1 overflow-hidden">
+                    {currentVer.tags.map((t) => (
+                      <span key={t} className="rounded bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                  <ChevronDown className={cn("h-3.5 w-3.5 shrink-0 text-muted-foreground transition-transform", open && "rotate-180")} />
                 </button>
-                {/* Tags row */}
-                <div className="mt-1.5 flex flex-wrap gap-1">
-                  {currentVer.tags.map((t) => (
-                    <span key={t} className="rounded border border-border bg-muted/50 px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                      {t}
-                    </span>
-                  ))}
-                </div>
                 {open && (
                   <div className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-md border border-border bg-popover shadow-lg animate-fade-in">
                     {s.versions.map((ver) => (
@@ -126,9 +163,16 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
                         }}
                         className={cn("flex w-full flex-col items-start gap-1 px-3 py-2 text-xs hover:bg-accent", v === ver.name && "bg-accent text-accent-foreground")}
                       >
-                        <div className="flex w-full items-center justify-between">
-                          <span className="font-medium">{ver.name}</span>
-                          {v === ver.name && <Check className="h-3 w-3" />}
+                        <div className="flex w-full items-center justify-between gap-2">
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-medium">{ver.name}</span>
+                            {ver.recommended && (
+                              <span className="inline-flex items-center gap-0.5 rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                                <Flame className="h-2.5 w-2.5" />推荐
+                              </span>
+                            )}
+                          </div>
+                          {v === ver.name && <Check className="h-3 w-3 shrink-0" />}
                         </div>
                         <div className="flex flex-wrap gap-1">
                           {ver.tags.map((t) => (

@@ -1,7 +1,26 @@
 export type ModelVersion = {
   name: string;
   tags: string[];
+  recommended?: boolean;
 };
+
+export type ModelCategory = {
+  id: string;
+  name: string;
+  emoji: string;
+  match?: (tag: string) => boolean;
+};
+
+export const MODEL_CATEGORIES: ModelCategory[] = [
+  { id: "all", name: "全部", emoji: "🗂" },
+  { id: "recommend", name: "推荐", emoji: "🔥" },
+  { id: "reasoning", name: "推理模型", emoji: "🧠" },
+  { id: "domestic", name: "国内模型", emoji: "🇨🇳" },
+  { id: "oversea", name: "海外模型", emoji: "🌐" },
+  { id: "multimodal", name: "多模态", emoji: "🖼" },
+  { id: "long", name: "长文本", emoji: "📄" },
+  { id: "flagship", name: "旗舰模型", emoji: "👑" },
+];
 
 export type ModelSeries = {
   id: string;
@@ -15,47 +34,47 @@ export type ModelSeries = {
 
 export const SERIES: ModelSeries[] = [
   { id: "deepseek", name: "DeepSeek", vendor: "深度求索", color: "#4D6BFE", domestic: true, description: "强推理与代码能力", versions: [
-    { name: "DeepSeek-V3.2", tags: ["通用模型", "国内模型"] },
+    { name: "DeepSeek-V3.2", tags: ["通用模型", "国内模型"], recommended: true },
     { name: "DeepSeek-V3.1", tags: ["通用模型", "国内模型"] },
     { name: "DeepSeek-R1", tags: ["推理模型", "国内模型"] },
   ]},
   { id: "kimi", name: "Kimi", vendor: "月之暗面", color: "#1F1F1F", domestic: true, description: "长文本与联网搜索", versions: [
-    { name: "Kimi K2", tags: ["长文本", "国内模型"] },
+    { name: "Kimi K2", tags: ["长文本", "国内模型"], recommended: true },
     { name: "Kimi K1.5", tags: ["推理模型", "国内模型"] },
     { name: "Kimi 探索版", tags: ["联网搜索", "国内模型"] },
   ]},
   { id: "claude", name: "Claude", vendor: "Anthropic", color: "#D97757", domestic: false, description: "高质量写作与分析", versions: [
-    { name: "Claude Sonnet 4.5", tags: ["通用模型", "海外模型"] },
+    { name: "Claude Sonnet 4.5", tags: ["通用模型", "海外模型"], recommended: true },
     { name: "Claude Opus 4", tags: ["旗舰模型", "海外模型"] },
     { name: "Claude Haiku 4", tags: ["轻量快速", "海外模型"] },
   ]},
   { id: "gemini", name: "Gemini", vendor: "Google", color: "#1A73E8", domestic: false, description: "多模态全能模型", versions: [
-    { name: "Gemini 3 Pro", tags: ["多模态", "海外模型"] },
+    { name: "Gemini 3 Pro", tags: ["多模态", "海外模型"], recommended: true },
     { name: "Gemini 2.5 Pro", tags: ["多模态", "海外模型"] },
     { name: "Gemini 2.5 Flash", tags: ["轻量快速", "海外模型"] },
   ]},
   { id: "zhipu", name: "智谱", vendor: "智谱 AI", color: "#3859FF", domestic: true, description: "中文场景表现优秀", versions: [
-    { name: "GLM-4.6", tags: ["通用模型", "国内模型"] },
+    { name: "GLM-4.6", tags: ["通用模型", "国内模型"], recommended: true },
     { name: "GLM-4-Plus", tags: ["通用模型", "国内模型"] },
     { name: "GLM-Zero", tags: ["推理模型", "国内模型"] },
   ]},
   { id: "qwen", name: "Qwen", vendor: "通义千问", color: "#615CED", domestic: true, description: "开源旗舰大模型", versions: [
-    { name: "Qwen3-Max", tags: ["旗舰模型", "国内模型"] },
+    { name: "Qwen3-Max", tags: ["旗舰模型", "国内模型"], recommended: true },
     { name: "Qwen3-235B", tags: ["开源模型", "国内模型"] },
     { name: "QwQ-32B", tags: ["推理模型", "开源模型"] },
   ]},
   { id: "doubao", name: "豆包", vendor: "字节跳动", color: "#0066FF", domestic: true, description: "速度快、性价比高", versions: [
-    { name: "豆包 1.6 Pro", tags: ["通用模型", "国内模型"] },
+    { name: "豆包 1.6 Pro", tags: ["通用模型", "国内模型"], recommended: true },
     { name: "豆包 1.5 Pro", tags: ["通用模型", "国内模型"] },
     { name: "豆包 Lite", tags: ["轻量快速", "国内模型"] },
   ]},
   { id: "openai", name: "OpenAI", vendor: "OpenAI", color: "#10A37F", domestic: false, description: "通用能力业界标杆", versions: [
-    { name: "GPT-5.2", tags: ["旗舰模型", "海外模型"] },
+    { name: "GPT-5.2", tags: ["旗舰模型", "海外模型"], recommended: true },
     { name: "GPT-5", tags: ["通用模型", "海外模型"] },
     { name: "GPT-4o", tags: ["多模态", "海外模型"] },
   ]},
   { id: "grok", name: "Grok", vendor: "xAI", color: "#000000", domestic: false, description: "实时信息与幽默风格", versions: [
-    { name: "Grok 4", tags: ["联网搜索", "海外模型"] },
+    { name: "Grok 4", tags: ["联网搜索", "海外模型"], recommended: true },
     { name: "Grok 3", tags: ["通用模型", "海外模型"] },
     { name: "Grok 2", tags: ["通用模型", "海外模型"] },
   ]},

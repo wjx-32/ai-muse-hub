@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, X, Send, Globe, Paperclip, Copy, RefreshCw, ThumbsUp } from "lucide-react";
+import { ChevronDown, X, Send, Globe, Paperclip, Copy, RefreshCw, ThumbsUp, Flame } from "lucide-react";
 import { SERIES, SAMPLE_REPLIES } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -110,7 +110,14 @@ export function ChatCompare({ selected, versionMap, onSetVersion, onReplaceSerie
                             }}
                             className={cn("flex w-full flex-col items-start gap-1 px-3 py-2 text-left text-xs hover:bg-accent", v.name === ver && "bg-accent text-accent-foreground")}
                           >
-                            <span className="font-medium">{v.name}</span>
+                            <div className="flex w-full items-center gap-1.5">
+                              <span className="font-medium">{v.name}</span>
+                              {v.recommended && (
+                                <span className="inline-flex items-center gap-0.5 rounded bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                                  <Flame className="h-2.5 w-2.5" />推荐
+                                </span>
+                              )}
+                            </div>
                             <div className="flex flex-wrap gap-1">
                               {v.tags.map((t) => (
                                 <span key={t} className="rounded bg-background/60 px-1.5 py-0.5 text-[10px] text-muted-foreground">{t}</span>
