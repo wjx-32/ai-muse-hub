@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Check, X, Paperclip, Send, Globe, Sparkles } from "lucide-react";
-import { SERIES, type ModelSeries } from "@/lib/mockData";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, Check, X, Paperclip, Send, Globe, Sparkles, Flame } from "lucide-react";
+import { SERIES, MODEL_CATEGORIES, type ModelSeries } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -20,6 +20,7 @@ export function ChatHome({ selected, versionMap, onToggle, onSetVersion, onSend 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
   const [web, setWeb] = useState(false);
+  const [category, setCategory] = useState<string>("all");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
