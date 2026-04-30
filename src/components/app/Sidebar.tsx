@@ -100,7 +100,7 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="top" className="max-w-[220px] text-xs leading-relaxed">
-                  每月免费赠送 200 次对话、100 次绘图额度，次数于每月 1 日重置，当月有效，月底清空。
+                  每月免费赠送 200 次对话、100 张绘图额度，于每月 1 日重置，当月有效，月底清空。
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -116,7 +116,7 @@ export function Sidebar({ mode, onModeChange, activeId, onSelectItem, onNew }: P
               <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
                 <Palette className="h-3 w-3" /> 绘图
               </div>
-              <div className="mt-0.5 text-base font-bold text-primary">50<span className="ml-0.5 text-[10px] font-normal text-muted-foreground">次</span></div>
+              <div className="mt-0.5 text-base font-bold text-primary">50<span className="ml-0.5 text-[10px] font-normal text-muted-foreground">张</span></div>
             </div>
           </div>
         </div>
